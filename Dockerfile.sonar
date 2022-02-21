@@ -1,0 +1,4 @@
+FROM sonarqube:8.9-community
+
+RUN apk update
+RUN apk add curl

@@ -1,0 +1,12 @@
+FROM newtmitch/sonar-scanner:4.5
+
+RUN apk update
+RUN apk add git curl
+COPY ./ /usr/src
+
+CMD curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password?login=admin&previousPassword=admin&password=Abc123@" \
+    || pwd && ls -la \
+    || git checkout -f $BRANCH1 \
+    && sonar-scanner -D"sonar.javascript.lcov.reportPaths=coverage/lcov.info" -D"sonar.projectKey=$PROJECT_KEY" -D"sonar.projectName=$PROJECT_KEY" -D"sonar.login=admin" -D"sonar.password=Abc123@" -D"sonar.sources=."  -D"sonar.host.url=http://localhost:9000/" -D"sonar.projectVersion=$BRANCH1" \
+    && git checkout -f $BRANCH2 \
+    && sonar-scanner -D"sonar.javascript.lcov.reportPaths=coverage/lcov.info" -D"sonar.projectKey=$PROJECT_KEY" -D"sonar.projectName=$PROJECT_KEY" -D"sonar.login=admin" -D"sonar.password=Abc123@" -D"sonar.sources=."  -D"sonar.host.url=http://localhost:9000/" -D"sonar.projectVersion=$BRANCH2"
