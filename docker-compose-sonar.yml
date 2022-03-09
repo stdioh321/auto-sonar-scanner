@@ -24,8 +24,6 @@ services:
       - PROJECT_KEY=example
       - BRANCH1=master
       - BRANCH2=release/0.0.1
-    # volumes:
-    #   - ./:/usr/src
     depends_on:
       sonar:
         condition: service_healthy

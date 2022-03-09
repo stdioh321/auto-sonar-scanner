@@ -2,3 +2,6 @@ FROM sonarqube:8.9-community
 
 RUN apk update
 RUN apk add curl
+
+HEALTHCHECK --interval=5s --timeout=10s --retries=10 \
+  CMD curl -s "http://localhost:9000/api/system/status" | grep '"status":"UP"' || exit 1

@@ -1,0 +1,9 @@
+version: '3.0'
+services:
+  test:
+    container_name: test
+    image: nginx
+    ports:
+      - 8888:80
+    volumes:
+      - ../express-hello-world:/app
