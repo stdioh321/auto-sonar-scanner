@@ -5,10 +5,14 @@ usage(){
   echo "-n [NOME] (Nome do projeto)"
   echo "-s [SRC] Caminho do projeto \"/home/pc/meu-projeto/src\""
   echo "-b [BRANCH1,BRANCH2,...] Branches para testar. Min: 1"
+  echo "-e [-Dsonar.algo1=algo1 -Dsonar.algo2=algo2 ] (Opcional) Parâmetros extras para o sonar-scanner"
 }
 
-while getopts ':s:b:n:h' opt; do
+while getopts ':e:s:b:n:h' opt; do
   case "$opt" in
+    e)
+      EXTRA_ARGS="$OPTARG"
+      ;;
     s)
       SRC_FOLDER="$OPTARG"
       ;;
@@ -65,6 +69,7 @@ services:
     environment:
       - PROJECT_KEY=$PROJECT_KEY
       - BRANCHES=$BRANCHES
+      - EXTRA_ARGS=$EXTRA_ARGS
     volumes:
       - $SRC_FOLDER:/usr/src
     depends_on:
