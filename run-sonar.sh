@@ -7,6 +7,10 @@ usage(){
   echo "-b [BRANCH1,BRANCH2,...] Branches para testar. Min: 1"
   echo "-e [-Dsonar.algo1=algo1 -Dsonar.algo2=algo2 ] (Opcional) Parâmetros extras para o sonar-scanner"
 }
+if [[ -z $(which docker) ||  -z $(which docker-compose) ]]; then
+  echo "Necessario ter instalado docker e docker-compose 😠😠😠"
+  exit 1
+fi
 
 while getopts ':e:s:b:n:h' opt; do
   case "$opt" in
