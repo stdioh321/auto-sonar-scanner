@@ -7,10 +7,16 @@ usage(){
   echo "-b [BRANCH1,BRANCH2,...] Branches para testar. Min: 1"
   echo "-e [-Dsonar.algo1=algo1 -Dsonar.algo2=algo2 ] (Opcional) Parâmetros extras para o sonar-scanner"
 }
-if [[ -z $(which docker) ||  -z $(which docker-compose) ]]; then
+
+if [[ -z $(which docker) ||  (-z $(which docker-compose) &&  -z $(docker compose 2> /dev/null)) ]]; then
   echo "Necessario ter instalado docker e docker-compose 😠😠😠"
   exit 1
+elif [[ -z $(which docker-compose) ]]; then
+  DOCKER_COMPOSE="docker compose"
+else
+  DOCKER_COMPOSE="docker-compose"
 fi
+
 
 while getopts ':e:s:b:n:h' opt; do
   case "$opt" in
@@ -58,14 +64,12 @@ if [[ -z  $SRC_FOLDER || -z  $BRANCHES || -z $PROJECT_KEY ]]; then
 fi
 
 read -d '' tempDockerCompose << EOF
-version: '3.0'
+version: '3.3'
 services:
   sonar:
     container_name: sonar
     image: diaslinoh/auto-sonar:0.0.1
     network_mode: host
-    logging:
-      driver: "syslog"
   sonar-scanner:
     container_name: sonar-scanner
     image: diaslinoh/auto-sonar-scanner:0.0.1
@@ -81,5 +85,5 @@ services:
         condition: service_healthy
 EOF
 
-docker-compose -f - build <<<"$tempDockerCompose"
-docker-compose  -f - up <<<"$tempDockerCompose"
+$DOCKER_COMPOSE -f - build <<<"$tempDockerCompose"
+$DOCKER_COMPOSE -f - up <<<"$tempDockerCompose"

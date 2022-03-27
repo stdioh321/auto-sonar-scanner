@@ -6,8 +6,8 @@ Projeto para executar Sonarqube e sonar-scanner utilizando o docker e docker-com
 
 ## Aplicações
 1. [curl](https://curl.se/download.html)
-2. [docker](https://docs.docker.com/get-docker/)
-3. [docker-compose](https://docs.docker.com/compose/install/)
+2. [docker >= 20.10.9](https://docs.docker.com/get-docker/)
+3. [docker-compose >= v2.3.3](https://github.com/docker/compose/releases)
 
 # Run 🏃‍♀️🏃🏃‍♂️
 ```
