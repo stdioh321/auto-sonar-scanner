@@ -87,3 +87,4 @@ EOF
 
 $DOCKER_COMPOSE -f - build <<<"$tempDockerCompose"
 $DOCKER_COMPOSE -f - up <<<"$tempDockerCompose"
+$DOCKER_COMPOSE -f - down <<<"$tempDockerCompose"
