@@ -63,6 +63,9 @@ if [[ -z  $SRC_FOLDER || -z  $BRANCHES || -z $PROJECT_KEY ]]; then
   exit 1
 fi
 
+MYUID=$(id -u)
+MYGID=$(id -g)
+
 read -d '' tempDockerCompose << EOF
 version: '3.3'
 services:
@@ -74,6 +77,7 @@ services:
     container_name: sonar-scanner
     image: diaslinoh/auto-sonar-scanner:0.0.1
     network_mode: host
+    user: "$MYUID:$MYGID"
     environment:
       - PROJECT_KEY=$PROJECT_KEY
       - BRANCHES=$BRANCHES
