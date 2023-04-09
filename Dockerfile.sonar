@@ -1,7 +1,11 @@
-FROM sonarqube:8.9-community
+FROM sonarqube:10-community
 
-RUN apk update
-RUN apk add curl
+USER root
+
+RUN apt update
+RUN apt install curl -y
+
+USER sonarqube
 
 HEALTHCHECK --interval=10s --timeout=20s --retries=15 \
   CMD curl -s "http://localhost:9000/api/system/status" | grep '"status":"UP"' || exit 1
