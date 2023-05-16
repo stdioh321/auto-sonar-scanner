@@ -1,9 +1,9 @@
-FROM sonarqube:10-community
+FROM sonarqube:9.8-community
 
 USER root
 
-RUN apt update
-RUN apt install curl -y
+RUN apk update
+RUN apk add curl
 
 USER sonarqube
 
