@@ -1,7 +1,7 @@
-FROM newtmitch/sonar-scanner:4.5
+FROM sonarsource/sonar-scanner-cli
 
 RUN apk update
-RUN apk add git curl
+RUN apk add git curl jq
 
 ENV USER=admin
 ENV OLD_PASS=admin
@@ -9,9 +9,17 @@ ENV NEW_PASS=Abc123@
 ENV SERVER_HOST=http://localhost:9000
 
 CMD curl -s -u admin:admin -X POST "$SERVER_HOST/api/users/change_password?login=$USER&previousPassword=$OLD_PASS&password=$NEW_PASS" || \
+    sleep 5 && \
+    export output=$(curl -X POST -u admin:$NEW_PASS "$SERVER_HOST/api/user_tokens/generate?name=$PROJECT_KEY&login=admin") && \
+    export token=$(echo "$output" | jq .token | tr -d '"') && \
+    echo "PROJECT_KEY=$PROJECT_KEY" && \
+    echo "TOKEN=$token" && \
+    [ -z "$token" ] && exit 1 || \
+    cp -R /temp/current/. . && \
     echo $BRANCHES && \
     echo $EXTRA_ARGS && \
+    git config --global --add safe.directory /usr/src && \
     for b in $(echo $BRANCHES | tr "," "\n");do \
         git checkout -f $b && \
-        sonar-scanner -D"sonar.projectKey=$PROJECT_KEY" -D"sonar.projectName=$PROJECT_KEY" -D"sonar.login=$USER" -D"sonar.password=$NEW_PASS" -D"sonar.sources=."  -D"sonar.host.url=$SERVER_HOST" -D"sonar.projectVersion=$b" $EXTRA_ARGS; \
+        sonar-scanner -D"sonar.projectKey=$PROJECT_KEY" -D"sonar.projectName=$PROJECT_KEY" -D"sonar.login=$token" -D"sonar.sources=." -D"sonar.host.url=$SERVER_HOST" -D"sonar.projectVersion=$b" $EXTRA_ARGS; \
     done

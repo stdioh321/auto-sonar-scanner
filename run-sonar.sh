@@ -75,15 +75,14 @@ services:
     network_mode: host
   sonar-scanner:
     container_name: sonar-scanner
-    image: diaslinoh/auto-sonar-scanner:0.0.1
+    image: diaslinoh/auto-sonar-scanner:0.0.2
     network_mode: host
-    user: "$MYUID:$MYGID"
     environment:
       - PROJECT_KEY=$PROJECT_KEY
       - BRANCHES=$BRANCHES
       - EXTRA_ARGS=$EXTRA_ARGS
     volumes:
-      - $SRC_FOLDER:/usr/src
+      - $SRC_FOLDER:/temp/current
     depends_on:
       sonar:
         condition: service_healthy
