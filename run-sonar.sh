@@ -4,9 +4,9 @@ usage() {
   cat << EOF
 Uso: $0 -n NOME -s /home/pc/MEU_PROJETO/src -b master,release [-e "-Dsonar.algo1=algo1 -Dsonar.algo2=algo2"]
 Opções:
-  -n [NOME]                Nome do projeto
-  -s [SRC]                 Caminho do projeto "/home/pc/meu-projeto/src"
-  -b [BRANCH1,BRANCH2,...] Branches para testar. Min: 1
+  -n {NOME}                Nome do projeto
+  -s {SRC}                 Caminho do projeto "/home/pc/meu-projeto/src"
+  -b {BRANCH1,BRANCH2,...} Branches para testar. Min: 1
   -e                       (Opcional) Parâmetros extras para o sonar-scanner
   -h                       Exibir esta mensagem de ajuda
 EOF
@@ -64,6 +64,25 @@ if [[ -z  $SRC_FOLDER || -z  $BRANCHES || -z $PROJECT_KEY ]]; then
   usage
   exit 1
 fi
+
+if ! git -C "$SRC_FOLDER" rev-parse --is-inside-work-tree &>/dev/null; then
+    echo "Erro: caminho de origem inválido ou não é um repositório Git."
+    exit 1
+fi
+
+regex="^[a-zA-Z0-9._-]+(,[a-zA-Z0-9._-]+)*$"
+if [[ ! $BRANCHES =~ $regex ]]; then
+    echo "Erro: formato de nomes das branchs inválido. Padrão esperado: \\w+(,\\w+)*"
+    exit 1
+fi
+
+IFS=',' branches_list=($(echo "$BRANCHES"))
+for branch in "${branches_list[@]}"; do
+    if ! git -C "$SRC_FOLDER" rev-parse --verify --quiet "refs/heads/$branch" &>/dev/null; then
+        echo "Error: Branch '$branch' não existe no repositorio."
+        exit 1
+    fi
+done
 
 # Use a heredoc for Docker Compose configuration
 read -r -d '' tempDockerCompose << EOF
