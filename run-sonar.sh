@@ -70,12 +70,6 @@ if ! git -C "$SRC_FOLDER" rev-parse --is-inside-work-tree &>/dev/null; then
     exit 1
 fi
 
-regex="^[a-zA-Z0-9._-]+(,[a-zA-Z0-9._-]+)*$"
-if [[ ! $BRANCHES =~ $regex ]]; then
-    echo "Erro: formato de nomes das branchs inválido. Padrão esperado: \\w+(,\\w+)*"
-    exit 1
-fi
-
 IFS=',' branches_list=($(echo "$BRANCHES"))
 for branch in "${branches_list[@]}"; do
     if ! git -C "$SRC_FOLDER" rev-parse --verify --quiet "refs/heads/$branch" &>/dev/null; then
