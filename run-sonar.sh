@@ -84,7 +84,7 @@ version: '3.3'
 services:
   sonar:
     container_name: sonar
-    image: diaslinoh/auto-sonar:0.0.2
+    image: diaslinoh/auto-sonar:0.0.3
     network_mode: host
   sonar-scanner:
     container_name: sonar-scanner
