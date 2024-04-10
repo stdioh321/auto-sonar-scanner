@@ -86,6 +86,17 @@ services:
     container_name: sonar
     image: diaslinoh/auto-sonar:0.0.3
     network_mode: host
+  deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1048M
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 26677
+        hard: 46677
   sonar-scanner:
     container_name: sonar-scanner
     image: diaslinoh/auto-sonar-scanner:0.0.2
@@ -99,6 +110,17 @@ services:
     depends_on:
       sonar:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1048M
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 26677
+        hard: 46677
 EOF
 
 # Use the function to execute Docker Compose operations
