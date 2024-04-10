@@ -1,4 +1,4 @@
-version: '3.0'
+version: "3.0"
 services:
   sonar:
     container_name: sonar
@@ -15,9 +15,20 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1048M
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 26677
+        hard: 46677
   sonar-scanner:
     container_name: sonar-scanner
-    build: 
+    build:
       dockerfile: Dockerfile.sonar-scanner
     network_mode: host
     environment:
@@ -26,4 +37,15 @@ services:
       - BRANCH2=release/0.0.1
     depends_on:
       sonar:
-        condition: service_healthy
+        condition:
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1048M
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 26677
+        hard: 46677
