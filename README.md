@@ -11,8 +11,12 @@ Projeto para executar Sonarqube e sonar-scanner utilizando o docker e docker-com
 
 # Run 🏃‍♀️🏃🏃‍♂️
 ```
-curl -s https://raw.githubusercontent.com/stdioh321/auto-sonar-scanner/main/run-sonar.sh -o run-sonar.sh
-bash run-sonar.sh -s CAMINHO_COMPLETO_DO_PROJETO -b BRANCHES_PARA_TESTE -n NOME_DO_PROJETO -e "PARAMETROS_SONAR-SCANNER"
+curl -s https://raw.githubusercontent.com/stdioh321/auto-sonar-scanner/main/run-sonar.sh -o
+cd auto-sonar-scanner
+sudo ln -n $PWD/run-sonar.sh /usr/bin/run-sonar
+run-sonar -s CAMINHO_COMPLETO_DO_PROJETO -b BRANCHES_PARA_TESTE01,BRANCHES_PARA_TESTE02 -n NOME_DO_PROJETO -e "PARAMETROS_SONAR-SCANNER"
+# Ex:
+# run-sonar -s $PWD -n "minha-api" -b master,$(git branch --show-current)
 
 # bash run-sonar.sh -s $PWD/node-express-mongo-example -b master,release -n "node-express-mongo-example" -e "-Dsonar.language=javascript -Dsonar.sourceEncoding=UTF-8"
 ```
