@@ -1,7 +1,11 @@
-FROM sonarsource/sonar-scanner-cli
+FROM sonarsource/sonar-scanner-cli:10
+
+USER root
 
 RUN apk update
 RUN apk add git curl jq
+
+USER scanner-cli
 
 ENV USER=admin
 ENV OLD_PASS=admin

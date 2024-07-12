@@ -78,13 +78,19 @@ for branch in "${branches_list[@]}"; do
     fi
 done
 
+# Get the current script filename
+scriptFile="${BASH_SOURCE[0]}"
+
+# Get the directory path of the script file
+scriptDirectory=$(dirname $(readlink $scriptFile))
+
 # Use a heredoc for Docker Compose configuration
 read -r -d '' tempDockerCompose << EOF
-version: '3.3'
 services:
   sonar:
     container_name: sonar
-    image: diaslinoh/auto-sonar:0.0.3
+    build:
+      dockerfile: $scriptDirectory/Dockerfile.sonar
     network_mode: host
     deploy:
       resources:
@@ -99,7 +105,8 @@ services:
         hard: 46677
   sonar-scanner:
     container_name: sonar-scanner
-    image: diaslinoh/auto-sonar-scanner:0.0.2
+    build:
+      dockerfile: $scriptDirectory/Dockerfile.sonar-scanner
     network_mode: host
     environment:
       - PROJECT_KEY=$PROJECT_KEY
@@ -124,6 +131,6 @@ run_docker_compose() {
 }
 
 # Execute Docker Compose commands
-run_docker_compose "build"
+run_docker_compose "build" --no-cache
 run_docker_compose "up"
 run_docker_compose "down"
