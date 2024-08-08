@@ -95,7 +95,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2048M
+          memory: 6000M
         reservations:
           memory: 1048M
     ulimits:
@@ -120,7 +120,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2048M
+          memory: 6000M
         reservations:
           memory: 1048M
 EOF
